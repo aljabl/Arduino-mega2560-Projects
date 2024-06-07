@@ -9,7 +9,7 @@
 ; will permit the “up”/”down” buttons to work in a different part of the display’s 
 ; top row.
 
-# ------------------------------ INITIALIZATIONS ----------------------------- #
+; # ------------------------------ INITIALIZATIONS ----------------------------- #
 ; Author: Mike Zastre
 
 ; This sections initializes the following: 
@@ -97,11 +97,11 @@
 .endif
 
 reset:
-# -------------------------- END OF INITIALIZATIONS -------------------------- #
+; # -------------------------- END OF INITIALIZATIONS -------------------------- #
 
 
 
-# ----------------------- PRE_INTERRUPT INITIALIZATIONS ---------------------- #
+; # ----------------------- PRE_INTERRUPT INITIALIZATIONS ---------------------- #
 ; Author: Alexandra Blais
 
 .def boundary_low = r0
@@ -113,7 +113,7 @@ reset:
 .def column = r20
 .def char_index = r21
 
-# ---------------------------------------------------------------------------- #
+; # ---------------------------------------------------------------------------- #
 
 ; Set up stack.
 ldi temp, low(RAMEND)
@@ -121,12 +121,12 @@ out SPL, temp
 ldi temp, high(RAMEND)
 out SPH, temp
 
-# ---------------------------------------------------------------------------- #
+; # ---------------------------------------------------------------------------- #
 
 ; Initalize LCD display.
 rcall lcd_init
 
-# ---------------------------------------------------------------------------- #
+; # ---------------------------------------------------------------------------- #
 
 ; Initialize pointer for TOP_LINE_CONTENT. 
 ldi YH, high(TOP_LINE_CONTENT)
@@ -147,7 +147,7 @@ push YH
 pop YH
 pop YL
 
-# ---------------------------------------------------------------------------- #
+; # ---------------------------------------------------------------------------- #
 
 ; Initialize pointer for CURRENT_CHARSET_INDEX.
 push XL
@@ -168,16 +168,16 @@ push XH
 	pop XH
 	pop XL
 
-# ---------------------------------------------------------------------------- #
+; # ---------------------------------------------------------------------------- #
 
 ; Initalize CURRENT_CHAR_INDEX to 0.
 	ldi r17, 0
 	sts CURRENT_CHAR_INDEX, r17
-# ------------------- END OF PRE-INTERRUPT INITIALIZATIONS ------------------- #
+; # ------------------- END OF PRE-INTERRUPT INITIALIZATIONS ------------------- #
 
 
 
-# --------------------------- TIMER INITIALIZATIONS -------------------------- #
+; # --------------------------- TIMER INITIALIZATIONS -------------------------- #
 ; Author: Mike Zastre
 
 	; initialize the ADC converter (which is needed
@@ -232,12 +232,12 @@ push XH
 	sts TIMSK4, r16
 
 	sei
-# ----------------------- END OF TIMER INITIALIZATIONS ----------------------- #
+; # ----------------------- END OF TIMER INITIALIZATIONS ----------------------- #
 
 
 
 start:
-# ---------------------------------- TIMER 3 --------------------------------- #
+; # ---------------------------------- TIMER 3 --------------------------------- #
 ; Author: Alexandra Blais
 ; For timer3: The polling loop will examine the values in the five memory areas 
 ; (listed in the two bullet points above) every 100 milliseconds. The code in 
@@ -344,11 +344,11 @@ timer3:
 		
 	end_timer3:
 		rjmp start
-# ------------------------------ END OF TIMER 3 ------------------------------ #
+; # ------------------------------ END OF TIMER 3 ------------------------------ #
 
 
 
-# ------------------------- TIMER 3 HELPER FUNCTIONS ------------------------- #
+; # ------------------------- TIMER 3 HELPER FUNCTIONS ------------------------- #
 ; Author: Alexandra Blais
 	
 put_char:
@@ -357,7 +357,7 @@ put_char:
 		pop temp
 		ret
 
-# ---------------------------------------------------------------------------- #
+; # ---------------------------------------------------------------------------- #
 
 set_position:
 		push temp
@@ -367,7 +367,7 @@ set_position:
 		pop temp
 		ret
 
-# ---------------------------------------------------------------------------- #
+; # ---------------------------------------------------------------------------- #
 
 clear_spots:
 	push temp
@@ -389,7 +389,7 @@ clear_spots:
 	pop temp
 	ret
 
-# ---------------------------------------------------------------------------- #
+; # ---------------------------------------------------------------------------- #
 
 display_top_line:
 	push temp
@@ -416,11 +416,11 @@ display_top_line:
 	pop temp
 	rjmp end_timer3
 
-# ---------------------- END OF TIMER 3 HELPER FUNCTIONS --------------------- #
+; # ---------------------- END OF TIMER 3 HELPER FUNCTIONS --------------------- #
 
 
 
-# ---------------------------------- TIMER 1 --------------------------------- #
+; # ---------------------------------- TIMER 1 --------------------------------- #
 ; Author: Alexandra Blais
 ; The handler will use a polling loop to examine the ADC for button-presses every 10 milliseconds, 
 ; writing correct values into the BUTTON_IS_PRESSED and LAST_BUTTON_PRESSED 
@@ -508,11 +508,11 @@ timer1:
 			pop temp
 	reti
 
-# ------------------------------ END OF TIMER 1 ------------------------------ #
+; # ------------------------------ END OF TIMER 1 ------------------------------ #
 
 
 
-# -------------------------- TIMER 1 POLLING ROUTINE ------------------------- #
+; # -------------------------- TIMER 1 POLLING ROUTINE ------------------------- #
 ; Author: Alexandra Blais
 
 timer1_polling_routine:
@@ -540,11 +540,11 @@ timer1_polling_routine:
 		; if not set, continue polling until it is
 		brne wait
 	ret
-# ---------------------- END OF TIMER 1 POLLING ROUTINE ---------------------- #
+; # ---------------------- END OF TIMER 1 POLLING ROUTINE ---------------------- #
 
 
 
-# ---------------------------------- TIMER 4 --------------------------------- #
+; # ---------------------------------- TIMER 4 --------------------------------- #
 ; Author: Alexandra Blais
 ; The handler will examine the values in BUTTON_IS_PRESSED and LAST_BUTTON_PRESSED 
 ; every 0.5 seconds in order read and write memory areas CURRENT_CHARSET_INDEX, 
@@ -684,11 +684,11 @@ timer4:
 		out SREG, temp
 		pop temp
 		reti
-# ------------------------------ END OF TIMER 4 ------------------------------ #
+; # ------------------------------ END OF TIMER 4 ------------------------------ #
 
 
 
-# ------------------------- TIMER 4 HELPER FUNCTIONS ------------------------- #
+; # ------------------------- TIMER 4 HELPER FUNCTIONS ------------------------- #
 ; Author: Alexandra Blais
 
 set_CURRENT_CHARSET_INDEX_pointer:
@@ -703,7 +703,7 @@ set_CURRENT_CHARSET_INDEX_pointer:
 	; X now points to addr of byte (containing char index) associated with current column.
 	ret
 
-# ---------------------------------------------------------------------------- #
+; # ---------------------------------------------------------------------------- #
 
 set_TOP_LINE_CONTENT_pointer:
 	; Set Y pointer to beginning of TOP_LINE_CONTENT.
@@ -717,7 +717,7 @@ set_TOP_LINE_CONTENT_pointer:
 	; Y now points to addr of byte (containing char index) associated with current column.
 	ret
 
-# ---------------------------------------------------------------------------- #
+; # ---------------------------------------------------------------------------- #
 
 set_AVAILABLE_CHARSET_pointer:
 	; Set Z pointer to beginning of AVAILABLE_CHARSET.
@@ -730,11 +730,11 @@ set_AVAILABLE_CHARSET_pointer:
 	adc ZH, temp
 	; Now Z points to char associated with our most recent char index value.
 	ret
-# ---------------------- END OF TIMER 4 HELPER FUNCTIONS --------------------- #
+; # ---------------------- END OF TIMER 4 HELPER FUNCTIONS --------------------- #
 
 
 
-# --------------------------------- VARIABLES -------------------------------- #
+; # --------------------------------- VARIABLES -------------------------------- #
 ; Author: Mike Zastre
 
 .cseg
@@ -750,4 +750,4 @@ TOP_LINE_CONTENT: .byte 16			; updated by timer4 interrupt, used by LCD update l
 CURRENT_CHARSET_INDEX: .byte 16		; updated by timer4 interrupt, used by LCD update loop
 CURRENT_CHAR_INDEX: .byte 1			; updated by timer4 interrupt, used by LCD update loop
 
-# ----------------------------- END OF VARIABLES ----------------------------- #
+; # ----------------------------- END OF VARIABLES ----------------------------- #
